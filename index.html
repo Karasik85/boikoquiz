@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ОГРАНКА · Метод Людмили Бойко</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;700&display=swap');
+:root{
+  --paper:#FBF4F5; --surface:#FFFFFF; --ink:#2A1620; --soft:#6E4F5B;
+  --berry:#8E2C4F; --rose:#E7C3CD; --gold:#B8912A; --line:#EBD6DC;
+  --on-berry:#FFFFFF; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1C1116; --surface:#27181F; --ink:#F6E7EC; --soft:#C9A9B5;
+    --berry:#E48DAB; --rose:#5A3343; --gold:#DDBB62; --line:#3E2731;
+    --on-berry:#1C1116; color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.6 Manrope,system-ui,sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:28px 20px 64px}
+header{display:flex;gap:18px;align-items:center;margin-bottom:22px}
+.gem{width:74px;height:74px;flex:none}
+.gem polygon{stroke:var(--gold);stroke-width:1.2;fill:transparent;transition:fill .35s}
+.gem polygon.on{fill:var(--berry)}
+.brand{font:600 34px/1 "Cormorant Garamond",Georgia,serif;letter-spacing:.06em;margin:0}
+.by{color:var(--soft);font-size:14px;margin:6px 0 0}
+nav{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:26px;overflow-x:auto}
+nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--soft);font:500 15px Manrope,sans-serif;padding:10px 12px;cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--berry);border-color:var(--berry)}
+h2{font:600 32px/1.15 "Cormorant Garamond",Georgia,serif;margin:0 0 10px}
+h3{font:600 23px/1.25 "Cormorant Garamond",Georgia,serif;margin:28px 0 8px}
+p{margin:0 0 14px}
+.lead{color:var(--soft)}
+.count{color:var(--soft);font-size:14px;margin-bottom:8px}
+.q{font:500 24px/1.3 "Cormorant Garamond",Georgia,serif;margin:0 0 18px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font:400 16px/1.45 Manrope,sans-serif;cursor:pointer}
+.opt:hover{border-color:var(--berry)}
+.scale{grid-template-columns:repeat(2,1fr)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-block;background:var(--berry);color:var(--on-berry);border:0;border-radius:999px;padding:13px 22px;font:700 15px Manrope,sans-serif;text-decoration:none;cursor:pointer}
+.ghost{background:none;color:var(--berry);border:1px solid var(--berry)}
+.link{background:none;border:0;color:var(--soft);font:500 14px Manrope,sans-serif;cursor:pointer;padding:6px 0;text-decoration:underline}
+.result{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:4px 14px 14px 4px;padding:22px 20px}
+.tag{color:var(--gold);font-weight:700;font-size:14px;margin-bottom:4px}
+.bars{display:grid;gap:10px;margin:16px 0}
+.bar span{display:block;font-size:14px;color:var(--soft);margin-bottom:4px}
+.track{height:8px;background:var(--rose);border-radius:8px;overflow:hidden}
+.fill{height:100%;background:var(--berry)}
+.step{color:var(--berry);font-weight:500}
+.note{font-size:14px;color:var(--soft);border-top:1px solid var(--line);padding-top:12px;margin-top:16px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0 6px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--soft);font-weight:500;font-size:14px}
+td:last-child{color:var(--berry);font-weight:500}
+ol.days{padding:0;list-style:none;margin:10px 0}
+ol.days li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+ol.days input{width:22px;height:22px;margin-top:3px;accent-color:var(--berry);flex:none}
+ol.days b{display:block}
+.quote{font:italic 500 22px/1.4 "Cormorant Garamond",Georgia,serif;color:var(--berry);margin:0 0 18px}
+.gate{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 20px}
+.gate label{display:block;font-size:14px;color:var(--soft);margin:14px 0 6px}
+.gate input[type=text]{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font:400 16px Manrope,sans-serif}
+.gate .agree{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--soft);margin:16px 0 4px}
+.gate .agree input{accent-color:var(--berry);width:18px;height:18px;margin-top:2px;flex:none}
+.err{color:var(--berry);font-size:14px;min-height:20px;margin:6px 0 0}
+.ritual{display:grid;gap:12px;margin:10px 0}
+.ritual div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.ritual b{color:var(--berry)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:420px){.scale{grid-template-columns:1fr}h2{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="gem" viewBox="0 0 100 100" aria-hidden="true">
+      <polygon points="10,35 30,10 30,35"/><polygon points="30,10 50,35 30,35"/>
+      <polygon points="30,10 70,10 50,35"/><polygon points="70,10 70,35 50,35"/>
+      <polygon points="70,10 90,35 70,35"/><polygon points="10,35 30,35 50,92"/>
+      <polygon points="30,35 50,35 50,92"/><polygon points="50,35 70,35 50,92"/>
+      <polygon points="70,35 90,35 50,92"/>
+    </svg>
+    <div><p class="brand">ОГРАНКА</p><p class="by">Метод Людмили Бойко</p></div>
+  </header>
+  <nav role="tablist">
+    <button role="tab" data-tab="quiz" aria-selected="true">Чи готова ти до змін</button>
+    <button role="tab" data-tab="test" aria-selected="false">Тест на вигорання</button>
+    <button role="tab" data-tab="guide" aria-selected="false">Гайд «Щоденні кроки»</button>
+  </nav>
+  <main id="app"></main>
+</div>
+
+<script>
+const LINKS = {
+  tg: "https://t.me/liudmila_boiko",
+  ogranka: "https://secure.wayforpay.com/payment/ogranka",
+  diana: "https://secure.wayforpay.com/payment/diana"
+};
+// URL веб-застосунку Google Apps Script (див. Ogranka_leads_AppsScript.gs). Поки порожній, заявки не відправляються.
+const LEAD_ENDPOINT = "";
+
+const QUIZ = [
+  {q:"Уяви, що через рік твоє життя таке саме, як зараз. Що відчуваєш?",
+   a:[["Спокій, мене все влаштовує",0],["Легкий сум, але жити можна",1],["Тривогу, так я не хочу",2],["Чітке «ні», я вже вирішила міняти",3]]},
+  {q:"Скільки разів за пів року ти обіцяла собі «почну з понеділка»?",
+   a:[["Жодного, нічого міняти не треба",0],["Раз чи два, і забувала",1],["Постійно, але до діла не доходить",2],["Обіцяла і вже щось роблю",3]]},
+  {q:"Що найчастіше тебе зупиняє?",
+   a:[["Не знаю, чого хочу",1],["Немає часу і сил",1],["Страшно, що не вийде або що скажуть інші",2],["Не знаю, з чого почати, але готова пробувати",3]]},
+  {q:"Завтра в тебе є 30 хвилин тільки для себе. Що робиш?",
+   a:[["Гортаю телефон",0],["Просто відпочиваю, сил ні на що",1],["Думаю про своє, але без конкретики",2],["Точно знаю, на що їх витрачу",3]]},
+  {q:"«У тебе вже всього достатньо, щоб почати». Як тобі ці слова?",
+   a:[["Це не про мене",0],["Хотілося б у це вірити",1],["Частково згодна",2],["Так, треба просто почати",3]]},
+  {q:"Що для тебе зараз головне?",
+   a:[["Щоб мене ніхто не чіпав",0],["Відновити сили",1],["Розібратися, чого я хочу",2],["Отримати результат у конкретній сфері",3]]},
+  {q:"Чи готова ти щодня приділяти час собі?",
+   a:[["Ні, такої можливості немає",0],["Інколи, як вийде",1],["15–20 хвилин знайду",2],["Так, і хочу систему та підтримку",3]]},
+  {q:"Чи готова ти вкладати в себе: час, увагу, гроші?",
+   a:[["Поки ні",0],["Тільки безкоштовно",1],["Готова на невеликий крок",2],["Готова до серйозної роботи",3]]}
+];
+
+const QUIZ_RES = [
+  {max:8, tag:"Камінь у породі", title:"Ти накопичуєш сили для змін",
+   text:"Бажання вже є, але зараз тобі важливіше відновитися, ніж бігти. І це нормально. Зміни не починаються з ривка, вони починаються з одного питання до себе на день.",
+   step:"Почни з відкритого Telegram-каналу Людмили: читай у своєму темпі, без зобов'язань. А ще пройди тест на вигорання, щоб побачити, куди йде твоя енергія.",
+   cta:[["Підписатися на канал Людмили",LINKS.tg],["Пройти тест на вигорання","#test"]]},
+  {max:16, tag:"Камінь у руках майстра", title:"Ти готова, тобі бракує структури",
+   text:"Ти знаєш, що хочеш змін, і навіть пробувала. Але сама швидко згасаєш: немає системи, немає того, хто тримає ритм. Тобі потрібні 10 днів, де кожен день ти робиш один конкретний крок.",
+   step:"Твій формат: платна ОГРАНКА. Закритий Telegram-канал, робочий зошит, дві живі зустрічі з Людмилою на старті й на фініші.",
+   cta:[["Записатися в ОГРАНКУ, ₴1 500",LINKS.ogranka],["Отримати гайд «Щоденні кроки»","#guide"]]},
+  {max:24, tag:"Діамант, готовий до огранення", title:"Ти готова до глибокої роботи",
+   text:"Ти не шукаєш натхнення, ти хочеш результату. Готова виділяти час, вкладатися і йти до кінця. Тобі підійде тривала програма з групою і щотижневим ритмом.",
+   step:"Твій формат: програма ДІАНА. 12 групових зустрічей за 3 місяці, закритий чат, робочий зошит. Можна почати з підписки на 30 днів (₴2 500) або взяти повну програму (₴15 000 за 3 місяці).",
+   cta:[["Обрати формат ДІАНИ",LINKS.diana],["Почати з ОГРАНКИ",LINKS.ogranka]]}
+];
+
+const SCALE = [["Ніколи",0],["Інколи",1],["Часто",2],["Майже завжди",3]];
+const TEST = [
+  ["Я прокидаюся вже втомленою",0],
+  ["Вечорами в мене немає сил ні на що, крім телефону чи серіалу",0],
+  ["Навіть після вихідних я не відчуваю, що відпочила",0],
+  ["Мене виснажують справи, які раніше давалися легко",0],
+  ["Мене дратують люди, з якими я працюю або живу",1],
+  ["Я роблю справи на автоматі, без включеності",1],
+  ["Мені хочеться, щоб усі просто залишили мене в спокої",1],
+  ["Я відкладаю розмови й зустрічі, бо на них немає ресурсу",1],
+  ["Мені здається, що я багато роблю, а результату немає",2],
+  ["Я перестала радіти своїм досягненням",2],
+  ["Я не пам'ятаю, коли востаннє робила щось лише для себе",2],
+  ["Мені складно відповісти на питання, чого я хочу",2]
+];
+const BLOCKS = ["Енергія тіла","Контакт з людьми","Сенс і радість"];
+const TEST_RES = [
+  {max:12, tag:"Зелена зона", title:"Ресурс є, бережи його",
+   text:"Втома буває, але ти відновлюєшся. Зараз найкращий момент, щоб вкладати енергію не в «пережити тиждень», а у свої цілі.",
+   step:"Візьми гайд «Щоденні кроки» і перетвори свою енергію на конкретний результат.",
+   cta:[["Відкрити гайд","#guide"],["Записатися в ОГРАНКУ",LINKS.ogranka]]},
+  {max:24, tag:"Жовта зона", title:"Тривожний сигнал",
+   text:"Ти ще тримаєшся, але енергія витікає швидше, ніж поповнюється. Якщо нічого не змінити, це перетікає у виснаження. Подивись нижче, яка сфера просідає найбільше: з неї і починай.",
+   step:"Перший день ОГРАНКИ присвячений саме енергії: що її дає, що забирає і що можна прибрати вже сьогодні.",
+   cta:[["Записатися в ОГРАНКУ, ₴1 500",LINKS.ogranka],["Підписатися на канал Людмили",LINKS.tg]]},
+  {max:36, tag:"Червона зона", title:"Енергія на нулі",
+   text:"Зараз тобі не потрібні нові цілі. Тобі потрібно відновитися. Почни з найпростішого: сон, їжа, хоча б 15 хвилин на день без обов'язків. Попроси про допомогу тих, хто поруч.",
+   step:"Якщо апатія, безсоння чи постійна тривога тримаються довше двох тижнів, звернись до лікаря або психолога. Це турбота про себе, а не слабкість. Коли з'являться сили, ОГРАНКА чекатиме на тебе.",
+   cta:[["Підписатися на канал Людмили",LINKS.tg]]}
+];
+
+const GUIDE = `
+<h2>Щоденні кроки</h2>
+<p class="quote">«Мрій. Дій. Лише через дію ми можемо жити це життя наповну. Повертай авторство свого життя.»</p>
+<p class="by">Людмила Бойко</p>
+<p>Цей гайд про те, як перетворити мрію на дію без складних технік. Тільки прості речі, тут і зараз.</p>
+
+<h3>Формула: одна мрія, одна ціль, один крок</h3>
+<p>Мрія показує напрямок. Ціль на 90 днів робить його конкретним. А крок на сьогодні рухає тебе вперед. Без кроку мрія так і залишається мрією.</p>
+
+<h3>Як зрозуміти, що це справді крок</h3>
+<p>Перевір свій крок за чотирма питаннями. Якщо на всі відповідь «так», це крок:</p>
+<table>
+  <tr><td>Я можу зробити це сьогодні?</td></tr>
+  <tr><td>Це займе до 15 хвилин?</td></tr>
+  <tr><td>Це залежить тільки від мене?</td></tr>
+  <tr><td>Я побачу, що це зроблено?</td></tr>
+</table>
+
+<h3>Не крок і крок: приклади</h3>
+<table>
+  <tr><th>Ціль</th><th>Не крок</th><th>Крок на сьогодні</th></tr>
+  <tr><td>Підняти ціну на свої послуги</td><td>Подумати про ціни</td><td>Виписати 3 послуги і нову ціну на кожну</td></tr>
+  <tr><td>Більше енергії</td><td>Почати жити здоровіше</td><td>Лягти спати сьогодні до 23:00</td></tr>
+  <tr><td>Своя справа чи продукт</td><td>Розібратися в темі</td><td>Написати 5 людям і спитати, чи їм цікаво</td></tr>
+  <tr><td>Час для себе</td><td>Більше відпочивати</td><td>Поставити в календар 30 хвилин у суботу</td></tr>
+</table>
+
+<h3>Щоденний ритуал на 5 хвилин</h3>
+<div class="ritual">
+  <div><b>Ранок, 2 хвилини.</b> Яка моя енергія від 1 до 10? Що одне сьогодні наблизить мене до цілі? О котрій я це зроблю?</div>
+  <div><b>День.</b> Зроби крок до обіду, поки є сили і день не забрав тебе.</div>
+  <div><b>Вечір, 3 хвилини.</b> Що я сьогодні зробила? Що мені це дало? Який крок завтра?</div>
+</div>
+
+<h3>Старт на 7 днів</h3>
+<p>Відмічай кожен день, коли зробила крок.</p>
+<ol class="days">
+  <li><input type="checkbox" aria-label="День 1"><div><b>День 1. Енергія</b>Оціни свою енергію від 1 до 10 і запиши, що сьогодні її дало.</div></li>
+  <li><input type="checkbox" aria-label="День 2"><div><b>День 2. Що забирає сили</b>Знайди одну річ, яка виснажує, і прибери або скороти її сьогодні.</div></li>
+  <li><input type="checkbox" aria-label="День 3"><div><b>День 3. Цінності</b>Запиши 3 слова про те, що для тебе справді важливо. Не «як треба», а як є.</div></li>
+  <li><input type="checkbox" aria-label="День 4"><div><b>День 4. Ціль</b>Сформулюй одну ціль на 90 днів одним реченням.</div></li>
+  <li><input type="checkbox" aria-label="День 5"><div><b>День 5. Мрія</b>Запиши одну мрію без цензури. Таку, яку соромно сказати вголос.</div></li>
+  <li><input type="checkbox" aria-label="День 6"><div><b>День 6. Перший крок</b>Обери крок до цілі за чотирма питаннями вище і зроби його.</div></li>
+  <li><input type="checkbox" aria-label="День 7"><div><b>День 7. Підсумок</b>Подивись, що змінилося за тиждень. Похвали себе за кожен відмічений день.</div></li>
+</ol>
+
+<h3>Головне правило</h3>
+<p>Пропустила день? Нічого страшного. Не пропускай двічі поспіль. Ритм важливіший за ідеальність.</p>
+
+<div class="result">
+  <p class="tag">Що далі</p>
+  <p>Ці 7 днів дають старт. У 10-денній ОГРАНЦІ ти пройдеш увесь шлях: енергія, внутрішні орієнтири, цінності, цілі, мрії, дія, щоденні кроки. З робочим зошитом, групою і живими зустрічами з Людмилою.</p>
+  <div class="row"><a class="btn" href="${LINKS.ogranka}" target="_blank" rel="noopener">Записатися в ОГРАНКУ, ₴1 500</a><a class="btn ghost" href="${LINKS.tg}" target="_blank" rel="noopener">Telegram-канал Людмили</a></div>
+</div>`;
+
+const app = document.getElementById("app");
+const facets = [...document.querySelectorAll(".gem polygon")];
+const setGem = f => facets.forEach((p,i)=>p.classList.toggle("on", i < Math.round(f*facets.length)));
+let state = {tab:"quiz", i:0, ans:[], started:false};
+
+function cta(list){
+  return list.map(([t,h],k)=>{
+    const ext = h.startsWith("http");
+    return `<a class="btn${k?" ghost":""}" href="${h}" ${ext?'target="_blank" rel="noopener"':'data-go="'+h.slice(1)+'"'}>${t}</a>`;
+  }).join("");
+}
+
+let lead = null;
+try { lead = JSON.parse(localStorage.getItem("ogranka_lead")); } catch(e) {}
+
+function gateHTML(kind){
+  const head = {quiz:"Твій результат готовий", test:"Твій результат готовий", guide:"Гайд «Щоденні кроки»"}[kind];
+  const sub = kind==="guide"
+    ? "Залиш свій Telegram, і гайд відкриється. Людмила напише тобі особисто з першим кроком."
+    : "Залиш свій Telegram, щоб побачити результат. Людмила напише тобі особисто з порадою саме для твого рівня.";
+  return `<form class="gate" data-gate="${kind}" novalidate>
+    <h2>${head}</h2><p class="lead">${sub}</p>
+    <label for="g-name">Як до тебе звертатися</label>
+    <input id="g-name" type="text" autocomplete="given-name" placeholder="Ім'я">
+    <label for="g-tg">Твій нік у Telegram</label>
+    <input id="g-tg" type="text" autocomplete="off" placeholder="@nickname" inputmode="text">
+    <label class="agree"><input id="g-ok" type="checkbox"> Погоджуюсь, що Людмила Бойко може написати мені в Telegram</label>
+    <p class="err" id="g-err" role="alert"></p>
+    <button class="btn" type="submit">${kind==="guide"?"Відкрити гайд":"Показати результат"}</button>
+  </form>`;
+}
+
+function summary(){
+  const {tab,ans} = state;
+  if(tab==="guide") return {tool:"Гайд «Щоденні кроки»", score:"", result:""};
+  const isQuiz = tab==="quiz", sum = ans.reduce((a,b)=>a+b,0);
+  const res = (isQuiz?QUIZ_RES:TEST_RES).find(r=>sum<=r.max);
+  return {tool: isQuiz?"Квіз «Чи готова ти до змін»":"Тест на вигорання", score:`${sum} з ${isQuiz?24:36}`, result:res.tag};
+}
+
+function sendLead(extra){
+  const data = Object.assign({}, lead, summary(), extra||{}, {page: location.href, at: new Date().toISOString()});
+  if(!LEAD_ENDPOINT) { console.info("LEAD (endpoint не налаштований):", data); return; }
+  fetch(LEAD_ENDPOINT, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(data)}).catch(()=>{});
+}
+
+function render(){
+  const {tab,i,ans} = state;
+  if(tab==="guide"){
+    if(!lead){ app.innerHTML = gateHTML("guide"); setGem(0); return; }
+    app.innerHTML = GUIDE; setGem(1); return;
+  }
+  const isQuiz = tab==="quiz", data = isQuiz ? QUIZ : TEST;
+  setGem(ans.length / data.length);
+  if(!state.started){
+    app.innerHTML = isQuiz
+      ? `<h2>Чи готова ти до змін?</h2><p class="lead">8 запитань, 2 хвилини. Відповідай чесно, як є зараз, а не як «правильно». У кінці отримаєш свій результат і перший крок.</p><button class="btn" data-start>Почати</button>`
+      : `<h2>Тест на вигорання</h2><p class="lead">12 тверджень про останній місяць. Обери, як часто це з тобою буває. Тест покаже рівень виснаження і сферу, де енергія витікає найбільше.</p><button class="btn" data-start>Почати тест</button>`;
+    return;
+  }
+  if(i < data.length){
+    const opts = isQuiz ? data[i].a : SCALE;
+    const qText = isQuiz ? data[i].q : data[i][0];
+    app.innerHTML = `<p class="count">Питання ${i+1} з ${data.length}</p>
+      <p class="q">${qText}</p>
+      <div class="opts ${isQuiz?"":"scale"}">${opts.map(([t,v])=>`<button class="opt" data-v="${v}">${t}</button>`).join("")}</div>
+      ${i?'<button class="link" data-back>Назад</button>':""}`;
+    return;
+  }
+  if(!lead){ app.innerHTML = gateHTML(tab); return; }
+  if(!state.sent){ sendLead(); state.sent = true; }
+  const sum = ans.reduce((a,b)=>a+b,0);
+  const res = (isQuiz?QUIZ_RES:TEST_RES).find(r=>sum<=r.max);
+  let bars = "";
+  if(!isQuiz){
+    bars = `<div class="bars">${BLOCKS.map((b,k)=>{
+      const s = ans.filter((_,j)=>TEST[j][1]===k).reduce((a,c)=>a+c,0);
+      return `<div class="bar"><span>${b}: ${s} з 12</span><div class="track"><div class="fill" style="width:${s/12*100}%"></div></div></div>`;
+    }).join("")}</div>`;
+  }
+  app.innerHTML = `<div class="result">
+    <p class="tag">${res.tag} · ${sum} з ${isQuiz?24:36}</p>
+    <h2>${res.title}</h2><p>${res.text}</p>${bars}<p class="step">${res.step}</p>
+    <div class="row">${cta(res.cta)}</div>
+    ${isQuiz?"":'<p class="note">Тест не є медичною діагностикою. Він допомагає помітити свій стан і вчасно подбати про себе.</p>'}
+  </div><button class="link" data-restart>Пройти ще раз</button>`;
+}
+
+function go(tab){
+  state = {tab, i:0, ans:[], started:false, sent:false};
+  document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===tab));
+  render(); window.scrollTo(0,0);
+}
+
+document.addEventListener("click", e=>{
+  const t = e.target.closest("button,a"); if(!t || t.closest("[data-gate]")) return;
+  if(t.dataset.tab) return go(t.dataset.tab);
+  if(t.dataset.go){ e.preventDefault(); return go(t.dataset.go); }
+  if(t.hasAttribute("data-start")){ state.started=true; state.i=0; state.ans=[]; state.sent=false; }
+  if(t.dataset.v!==undefined){ state.ans[state.i]=+t.dataset.v; state.ans.length=state.i+1; state.i++; }
+  if(t.dataset.v!==undefined) state.sent=false;
+  if(t.hasAttribute("data-back")){ state.i--; state.ans.length=state.i; }
+  if(t.hasAttribute("data-restart")) return go(state.tab);
+  render();
+});
+document.addEventListener("submit", e=>{
+  const f = e.target.closest("[data-gate]"); if(!f) return;
+  e.preventDefault();
+  const name = f.querySelector("#g-name").value.trim();
+  let tg = f.querySelector("#g-tg").value.trim().replace(/^https?:\/\/t\.me\//i,"").replace(/^@/,"");
+  const err = f.querySelector("#g-err");
+  if(!name) return err.textContent = "Напиши, як до тебе звертатися.";
+  if(!/^[A-Za-z0-9_]{5,32}$/.test(tg)) return err.textContent = "Нік у Telegram має бути латиницею, від 5 символів, наприклад @olena_k.";
+  if(!f.querySelector("#g-ok").checked) return err.textContent = "Постав галочку, щоб Людмила могла тобі написати.";
+  lead = {name, telegram:"@"+tg};
+  try { localStorage.setItem("ogranka_lead", JSON.stringify(lead)); } catch(e) {}
+  if(state.tab==="guide") sendLead();
+  render(); window.scrollTo(0,0);
+});
+render();
+</script>
+</body>
+</html>
