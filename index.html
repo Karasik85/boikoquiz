@@ -78,6 +78,20 @@ ol.days b{display:block}
 .author-photo{margin:0 0 24px}
 .author-photo figcaption{margin-top:8px;color:var(--soft);font-size:14px;text-align:center}
 @media(max-width:420px){.author-portrait{aspect-ratio:1/1;object-position:center 25%}}
+
+/* Muted violet controls, consistent across quiz and result screens. */
+:root{--control:#624774;--control-hover:#50385f;--control-soft:#f2ecf6;--control-line:#c9b9d4;--control-text:#513660}
+@media(prefers-color-scheme:dark){:root{--control:#bda3d1;--control-hover:#ceb8de;--control-soft:#35263f;--control-line:#705781;--control-text:#eadcf3}}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;max-width:100%;background:var(--control);color:#fff;border:1px solid var(--control);border-radius:12px;padding:13px 20px;font-weight:500;line-height:1.45;text-align:center;transition:background .18s,border-color .18s}
+.btn:hover{background:var(--control-hover);border-color:var(--control-hover)}
+.btn.ghost{background:var(--control-soft);border-color:var(--control-line);color:var(--control-text)}
+.btn.ghost:hover{border-color:var(--control);background:var(--surface)}
+.opt{border-radius:12px;transition:background .18s,border-color .18s}
+.opt:hover,.opt:focus-visible{background:var(--control-soft);border-color:var(--control)}
+nav button[aria-selected="true"]{color:var(--control-text);border-color:var(--control)}
+:focus-visible{outline-color:var(--control)}
+@media(prefers-color-scheme:dark){.btn:not(.ghost){color:#211629}}
+@media(max-width:420px){.row .btn{width:100%}}
 </style>
 </head>
 <body>
