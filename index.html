@@ -73,6 +73,11 @@ ol.days b{display:block}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:420px){.scale{grid-template-columns:1fr}h2{font-size:28px}}
+
+.author-portrait{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:center 28%;border-radius:14px;border:1px solid var(--line)}
+.author-photo{margin:0 0 24px}
+.author-photo figcaption{margin-top:8px;color:var(--soft);font-size:14px;text-align:center}
+@media(max-width:420px){.author-portrait{aspect-ratio:1/1;object-position:center 25%}}
 </style>
 </head>
 <body>
@@ -87,6 +92,10 @@ ol.days b{display:block}
     </svg>
     <div><p class="brand">ОГРАНКА</p><p class="by">Метод Людмили Бойко</p></div>
   </header>
+  <figure class="author-photo">
+    <img class="author-portrait" src="https://karasik85.github.io/boiko.github.io/images/liudmyla-personal.jpg" alt="Людмила Бойко" width="983" height="1280" fetchpriority="high">
+    <figcaption>Людмила Бойко · Тренерка з дії</figcaption>
+  </figure>
   <nav role="tablist">
     <button role="tab" data-tab="quiz" aria-selected="true">Чи готова ти до змін</button>
     <button role="tab" data-tab="test" aria-selected="false">Тест на вигорання</button>
