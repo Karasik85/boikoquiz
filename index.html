@@ -97,7 +97,7 @@ ol.days b{display:block}
 
 <script>
 const LINKS = {
-  tg: "https://t.me/liudmila_boiko",
+  tg: "https://t.me/liudmula_boiko",
   ogranka: "https://secure.wayforpay.com/payment/ogranka",
   diana: "https://secure.wayforpay.com/payment/diana"
 };
@@ -307,7 +307,7 @@ function render(){
   app.innerHTML = `<div class="result">
     <p class="tag">${res.tag} · ${sum} з ${isQuiz?24:36}</p>
     <h2>${res.title}</h2><p>${res.text}</p>${bars}<p class="step">${res.step}</p>
-    <div class="row">${cta(res.cta)}</div>
+    <div class="row">${cta(res.cta.some(([,url]) => url === LINKS.tg) ? res.cta : [...res.cta, ["Підписатися на канал Людмили", LINKS.tg]])}</div>
     ${isQuiz?"":'<p class="note">Тест не є медичною діагностикою. Він допомагає помітити свій стан і вчасно подбати про себе.</p>'}
   </div><button class="link" data-restart>Пройти ще раз</button>`;
 }
