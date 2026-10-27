@@ -303,10 +303,9 @@ let lead = null;
 // Contact delivery requires a fresh consent for each quiz or guide request.
 
 function gateHTML(kind){
-  const head = {quiz:"Твій результат готовий", test:"Твій результат готовий", guide:"Гайд «Щоденні кроки»"}[kind];
-  const sub = kind==="guide"
-    ? "Залиш свій Telegram, і гайд відкриється. Людмила напише тобі особисто з першим кроком."
-    : "Залиш свій Telegram, щоб побачити результат. Людмила напише тобі особисто з порадою саме для твого рівня.";
+  const head = "Хочеш продовжити з Людмилою?";
+  const sub = "За бажанням залиш контакт для зв’язку. Результат і матеріали вже доступні вище.";
+  if(lead) return '<p class="note" role="status">Сервіс прийняв заявку. Дякуємо!</p>';
   return `<form class="gate" data-gate="${kind}" novalidate>
     <h2>${head}</h2><p class="lead">${sub}</p>
     <label for="g-name">Як до тебе звертатися</label>
@@ -316,7 +315,8 @@ function gateHTML(kind){
     <label class="agree"><input id="g-ok" type="checkbox"> Погоджуюсь на передавання мого імені та Telegram команді Людмили Бойко через FormSubmit для зв’язку зі мною в Telegram. Відповіді й бали тесту не надсилаються.</label>
     <input name="_honey" type="text" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
     <p class="err" id="g-err" role="alert"></p>
-    <button class="btn" type="submit">${kind==="guide"?"Відкрити гайд":"Показати результат"}</button>
+    <button class="btn" type="submit">Надіслати контакт</button>
+    <p class="note"><a href="https://ig.me/m/liudmula_boiko" target="_blank" rel="noopener">Написати Людмилі в Instagram ↗</a></p>
   </form>`;
 }
 
@@ -354,8 +354,9 @@ async function sendLead(contact, tab){
 function render(){
   const {tab,i,ans} = state;
   if(tab==="guide"){
-    if(!lead){ app.innerHTML = gateHTML("guide"); setGem(0); return; }
-    app.innerHTML = GUIDE; setGem(1); return;
+    app.innerHTML = GUIDE + gateHTML("guide"); setGem(1);
+    if(!state.viewTracked){ state.viewTracked=true; window.boikoTrack("guide_view"); }
+    return;
   }
   const isQuiz = tab==="quiz", data = isQuiz ? QUIZ : TEST;
   setGem(ans.length / data.length);
@@ -374,7 +375,7 @@ function render(){
       ${i?'<button class="link" data-back>Назад</button>':""}`;
     return;
   }
-  if(!lead){ app.innerHTML = gateHTML(tab); return; }
+  if(!state.viewTracked){ state.viewTracked=true; window.boikoTrack(tab + "_result_view"); }
   const sum = ans.reduce((a,b)=>a+b,0);
   const res = (isQuiz?QUIZ_RES:TEST_RES).find(r=>sum<=r.max);
   let bars = "";
@@ -389,7 +390,7 @@ function render(){
     <h2>${res.title}</h2><p>${res.text}</p>${bars}<p class="step">${res.step}</p>
     <div class="row">${cta(res.cta.some(([,url]) => url === LINKS.tg) ? res.cta : [...res.cta, ["Підписатися на канал Людмили", LINKS.tg]])}</div>
     ${isQuiz?"":'<p class="note">Тест не є медичною діагностикою. Він допомагає помітити свій стан і вчасно подбати про себе.</p>'}
-  </div><button class="link" data-restart>Пройти ще раз</button>`;
+  </div><button class="link" data-restart>Пройти ще раз</button>${gateHTML(tab)}`;
 }
 
 function go(tab){
@@ -435,7 +436,7 @@ document.addEventListener("submit", async e=>{
     lead = contact;
     render(); window.scrollTo(0,0);
   } catch(error) {
-    err.textContent = "Не вдалося підтвердити надсилання. Перевір інтернет і спробуй ще раз. Якщо помилка повторюється, напиши Людмилі через посилання нижче.";
+    err.textContent = "Не вдалося підтвердити надсилання контакту. Твій результат доступний вище. Можеш спробувати ще раз або написати Людмилі в Instagram.";
   } finally {
     f.dataset.sending = "false";
     button.disabled = false;
