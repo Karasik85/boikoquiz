@@ -165,7 +165,7 @@ const LINKS = {
   diana: "https://secure.wayforpay.com/payment/diana"
 };
 // URL веб-застосунку Google Apps Script (див. Ogranka_leads_AppsScript.gs). Поки порожній, заявки не відправляються.
-const LEAD_ENDPOINT = "";
+const LEAD_ENDPOINT = "https://formsubmit.co/ajax/olganewlife99@gmail.com";
 
 const QUIZ = [
   {q:"Уяви, що через рік твоє життя таке саме, як зараз. Що відчуваєш?",
@@ -300,7 +300,7 @@ function cta(list){
 }
 
 let lead = null;
-try { lead = JSON.parse(localStorage.getItem("ogranka_lead")); } catch(e) {}
+// Contact delivery requires a fresh consent for each quiz or guide request.
 
 function gateHTML(kind){
   const head = {quiz:"Твій результат готовий", test:"Твій результат готовий", guide:"Гайд «Щоденні кроки»"}[kind];
@@ -310,10 +310,11 @@ function gateHTML(kind){
   return `<form class="gate" data-gate="${kind}" novalidate>
     <h2>${head}</h2><p class="lead">${sub}</p>
     <label for="g-name">Як до тебе звертатися</label>
-    <input id="g-name" type="text" autocomplete="given-name" placeholder="Ім'я">
+    <input id="g-name" maxlength="100" type="text" autocomplete="given-name" placeholder="Ім'я">
     <label for="g-tg">Твій нік у Telegram</label>
     <input id="g-tg" type="text" autocomplete="off" placeholder="@nickname" inputmode="text">
-    <label class="agree"><input id="g-ok" type="checkbox"> Погоджуюсь, що Людмила Бойко може написати мені в Telegram</label>
+    <label class="agree"><input id="g-ok" type="checkbox"> Погоджуюсь на передавання мого імені та Telegram команді Людмили Бойко через FormSubmit для зв’язку зі мною в Telegram. Відповіді й бали тесту не надсилаються.</label>
+    <input name="_honey" type="text" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
     <p class="err" id="g-err" role="alert"></p>
     <button class="btn" type="submit">${kind==="guide"?"Відкрити гайд":"Показати результат"}</button>
   </form>`;
@@ -327,10 +328,27 @@ function summary(){
   return {tool: isQuiz?"Квіз «Чи готова ти до змін»":"Тест на вигорання", score:`${sum} з ${isQuiz?24:36}`, result:res.tag};
 }
 
-function sendLead(extra){
-  const data = Object.assign({}, lead, summary(), extra||{}, {page: location.href, at: new Date().toISOString()});
-  if(!LEAD_ENDPOINT) { console.info("LEAD (endpoint не налаштований):", data); return; }
-  fetch(LEAD_ENDPOINT, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(data)}).catch(()=>{});
+async function sendLead(contact, tab){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
+  const data = {
+    _subject: "[BOIKO-LEAD] Нова заявка з квізу",
+    _template: "table", _captcha: "false",
+    name: contact.name, telegram: contact.telegram,
+    material: {quiz:"Квіз про зміни", test:"Тест саморефлексії", guide:"Гайд «Щоденні кроки»"}[tab],
+    page: location.origin + location.pathname,
+    submitted_at: new Date().toISOString(),
+    consent: "Згода на передавання імені й Telegram команді Людмили Бойко для зв’язку",
+    request_id: typeof crypto.randomUUID === "function" ? crypto.randomUUID() : String(Date.now())
+  };
+  try {
+    const response = await fetch(LEAD_ENDPOINT, {
+      method: "POST", headers: {"Content-Type":"application/json", "Accept":"application/json"},
+      body: JSON.stringify(data), signal: controller.signal
+    });
+    const result = await response.json();
+    if(!response.ok || !(result.success === true || result.success === "true")) throw new Error("Delivery rejected");
+  } finally { clearTimeout(timer); }
 }
 
 function render(){
@@ -357,7 +375,6 @@ function render(){
     return;
   }
   if(!lead){ app.innerHTML = gateHTML(tab); return; }
-  if(!state.sent){ sendLead(); state.sent = true; }
   const sum = ans.reduce((a,b)=>a+b,0);
   const res = (isQuiz?QUIZ_RES:TEST_RES).find(r=>sum<=r.max);
   let bars = "";
@@ -376,6 +393,7 @@ function render(){
 }
 
 function go(tab){
+  lead = null;
   state = {tab, i:0, ans:[], started:false, sent:false};
   document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===tab));
   render(); window.scrollTo(0,0);
@@ -392,7 +410,7 @@ document.addEventListener("click", e=>{
   if(t.hasAttribute("data-restart")) return go(state.tab);
   render();
 });
-document.addEventListener("submit", e=>{
+document.addEventListener("submit", async e=>{
   const f = e.target.closest("[data-gate]"); if(!f) return;
   e.preventDefault();
   const name = f.querySelector("#g-name").value.trim();
@@ -401,10 +419,28 @@ document.addEventListener("submit", e=>{
   if(!name) return err.textContent = "Напиши, як до тебе звертатися.";
   if(!/^[A-Za-z0-9_]{5,32}$/.test(tg)) return err.textContent = "Нік у Telegram має бути латиницею, від 5 символів, наприклад @olena_k.";
   if(!f.querySelector("#g-ok").checked) return err.textContent = "Постав галочку, щоб Людмила могла тобі написати.";
-  lead = {name, telegram:"@"+tg};
-  try { localStorage.setItem("ogranka_lead", JSON.stringify(lead)); } catch(e) {}
-  if(state.tab==="guide") sendLead();
-  render(); window.scrollTo(0,0);
+  if(f.dataset.sending === "true" || f.querySelector('[name="_honey"]').value) return;
+  const submittedState = state;
+  const button = f.querySelector('button[type="submit"]');
+  f.dataset.sending = "true";
+  button.disabled = true;
+  const originalText = button.textContent;
+  button.textContent = "Надсилаємо…";
+  err.textContent = "";
+  const contact = {name, telegram:"@"+tg};
+  try {
+    await sendLead(contact, submittedState.tab);
+    window.boikoTrack("lead_submitted");
+    if(state !== submittedState) return;
+    lead = contact;
+    render(); window.scrollTo(0,0);
+  } catch(error) {
+    err.textContent = "Не вдалося підтвердити надсилання. Перевір інтернет і спробуй ще раз. Якщо помилка повторюється, напиши Людмилі через посилання нижче.";
+  } finally {
+    f.dataset.sending = "false";
+    button.disabled = false;
+    button.textContent = originalText;
+  }
 });
 render();
 </script>
