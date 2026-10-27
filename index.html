@@ -93,6 +93,46 @@ nav button[aria-selected="true"]{color:var(--control-text);border-color:var(--co
 @media(prefers-color-scheme:dark){.btn:not(.ghost){color:#211629}}
 @media(max-width:420px){.row .btn{width:100%}}
 </style>
+<script>
+
+// Set to your verified GoatCounter endpoint, e.g. https://YOUR-CODE.goatcounter.com/count.
+// Empty means disabled: no analytics requests are sent.
+(() => {
+  const endpoint = "";
+  const site = location.pathname.startsWith("/boikoquiz") ? "quiz" : "site";
+  const queue = [];
+  window.boikoTrack = function(name) {
+    if (!endpoint || !/^[a-z0-9_-]+$/.test(name)) return;
+    const event = {path: site + "-" + name, title: site + ": " + name, event: true};
+    if (window.goatcounter && typeof window.goatcounter.count === "function") {
+      try { window.goatcounter.count(event); } catch (_) {}
+    } else if (queue.length < 50) queue.push(event);
+  };
+  if (!/^https:\/\/[a-z0-9-]+\.goatcounter\.com\/count$/.test(endpoint)) return;
+  let referrer = "";
+  try { referrer = document.referrer ? new URL(document.referrer).origin : ""; } catch (_) {}
+  window.goatcounter = {path: location.pathname, referrer: referrer};
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = "https://gc.zgo.at/count.js";
+  script.dataset.goatcounter = endpoint;
+  script.onload = () => {
+    if (typeof window.goatcounter.count === "function") {
+      queue.splice(0).forEach(event => { try { window.goatcounter.count(event); } catch (_) {} });
+    }
+  };
+  document.head.appendChild(script);
+  document.addEventListener("click", e => {
+    const link = e.target.closest("a[href]");
+    if (!link) return;
+    let url;
+    try { url = new URL(link.href, location.href); } catch (_) { return; }
+    if (url.hostname === "t.me") window.boikoTrack("telegram_click");
+    else if (["instagram.com", "www.instagram.com", "ig.me"].includes(url.hostname)) window.boikoTrack("instagram_click");
+    else if (url.origin === location.origin && /\.pdf$/i.test(url.pathname)) window.boikoTrack("guide_download_click");
+  });
+})();
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -345,9 +385,9 @@ document.addEventListener("click", e=>{
   const t = e.target.closest("button,a"); if(!t || t.closest("[data-gate]")) return;
   if(t.dataset.tab) return go(t.dataset.tab);
   if(t.dataset.go){ e.preventDefault(); return go(t.dataset.go); }
-  if(t.hasAttribute("data-start")){ state.started=true; state.i=0; state.ans=[]; state.sent=false; }
+  if(t.hasAttribute("data-start")){ window.boikoTrack(state.tab + "_start"); state.started=true; state.i=0; state.ans=[]; state.sent=false; }
   if(t.dataset.v!==undefined){ state.ans[state.i]=+t.dataset.v; state.ans.length=state.i+1; state.i++; }
-  if(t.dataset.v!==undefined) state.sent=false;
+  if(t.dataset.v!==undefined) { state.sent=false; if(state.i === (state.tab==="quiz" ? QUIZ.length : TEST.length)) window.boikoTrack(state.tab + "_complete"); }
   if(t.hasAttribute("data-back")){ state.i--; state.ans.length=state.i; }
   if(t.hasAttribute("data-restart")) return go(state.tab);
   render();
